@@ -54,98 +54,52 @@ offset_left = 704.0
 offset_right = 1152.0
 offset_bottom = 648.0
 
-[node name="Goods" type="ScrollContainer" parent="Shop"]
-layout_mode = 1
-offset_top = 264.0
-offset_right = 424.0
-offset_bottom = 384.0
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Shop/Goods"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="Product" type="HSplitContainer" parent="Shop/Goods/VBoxContainer"]
-layout_mode = 2
-
-[node name="Description" type="RichTextLabel" parent="Shop/Goods/VBoxContainer/Product"]
-layout_mode = 2
-text = "+1 за клик"
-fit_content = true
-scroll_active = false
-autowrap_mode = 0
-
-[node name="Buy" type="Button" parent="Shop/Goods/VBoxContainer/Product"]
-layout_mode = 2
-text = "Купить"
-
-[node name="Product2" type="HSplitContainer" parent="Shop/Goods/VBoxContainer"]
-layout_mode = 2
-
-[node name="Description" type="RichTextLabel" parent="Shop/Goods/VBoxContainer/Product2"]
-layout_mode = 2
-text = "+1 в секун"
-fit_content = true
-scroll_active = false
-autowrap_mode = 0
-
-[node name="Buy2" type="Button" parent="Shop/Goods/VBoxContainer/Product2"]
-layout_mode = 2
-text = "Купить"
-
-[node name="Product3" type="HSplitContainer" parent="Shop/Goods/VBoxContainer"]
-layout_mode = 2
-
-[node name="Description" type="RichTextLabel" parent="Shop/Goods/VBoxContainer/Product3"]
-layout_mode = 2
-text = "Продукт 3"
-fit_content = true
-scroll_active = false
-autowrap_mode = 0
-
-[node name="Buy3" type="Button" parent="Shop/Goods/VBoxContainer/Product3"]
-layout_mode = 2
-text = "Купить"
-
-[node name="Product4" type="HSplitContainer" parent="Shop/Goods/VBoxContainer"]
-layout_mode = 2
-
-[node name="Description" type="RichTextLabel" parent="Shop/Goods/VBoxContainer/Product4"]
-layout_mode = 2
-text = "Продукт 4"
-fit_content = true
-scroll_active = false
-autowrap_mode = 0
-
-[node name="Buy4" type="Button" parent="Shop/Goods/VBoxContainer/Product4"]
-layout_mode = 2
-text = "Купить"
-
-[node name="Product5" type="HSplitContainer" parent="Shop/Goods/VBoxContainer"]
-layout_mode = 2
-
-[node name="Description" type="RichTextLabel" parent="Shop/Goods/VBoxContainer/Product5"]
-layout_mode = 2
-text = "Продукт 5"
-fit_content = true
-scroll_active = false
-autowrap_mode = 0
-
-[node name="Buy5" type="Button" parent="Shop/Goods/VBoxContainer/Product5"]
-layout_mode = 2
-text = "Купить"
-
 [node name="Money" type="RichTextLabel" parent="Shop"]
 layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -168.0
-offset_top = 176.0
-offset_right = 209.0
-offset_bottom = 199.0
+anchors_preset = -1
+anchor_left = 0.528
+anchor_top = 0.272
+anchor_right = 0.528
+anchor_bottom = 0.272
+offset_left = -204.544
+offset_top = -0.256012
+offset_right = 204.456
+offset_bottom = 22.744
 grow_horizontal = 2
 text = "Value: "
 fit_content = true
 
+[node name="Product" type="RichTextLabel" parent="Shop"]
+layout_mode = 0
+offset_left = 32.0
+offset_top = 248.0
+offset_right = 168.0
+offset_bottom = 368.0
+text = "Hello1
+
+Hello2
+
+Hello3"
+fit_content = true
+scroll_active = false
+
+[node name="Buy" type="Button" parent="Shop"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.607
+anchor_top = 0.444
+anchor_right = 0.607
+anchor_bottom = 0.444
+offset_left = -87.936
+offset_top = 0.287964
+offset_right = 88.064
+offset_bottom = 31.288
+grow_horizontal = 2
+text = "Купить"
+
 [connection signal="button_down" from="Field/Click" to="." method="_on_click_button_down"]
-[connection signal="button_down" from="Shop/Goods/VBoxContainer/Product/Buy" to="." method="_on_buy_button_down"]
+[connection signal="mouse_entered" from="Shop/Product" to="." method="_on_product_mouse_entered"]
+[connection signal="mouse_exited" from="Shop/Product" to="." method="_on_product_mouse_exited"]
+[connection signal="button_down" from="Shop/Buy" to="." method="_on_buy_button_down"]
+[connection signal="mouse_entered" from="Shop/Buy" to="." method="_on_buy_mouse_entered"]
+[connection signal="mouse_exited" from="Shop/Buy" to="." method="_on_buy_mouse_exited"]
