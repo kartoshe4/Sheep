@@ -14,9 +14,9 @@ script = ExtResource("1_qp6bg")
 
 [node name="Field" type="Control" parent="."]
 anchors_preset = 0
-offset_left = 64.0
-offset_top = 32.0
-offset_right = 640.0
+offset_left = 104.0
+offset_top = 64.0
+offset_right = 600.0
 offset_bottom = 576.0
 
 [node name="Click" type="TextureButton" parent="Field"]
@@ -27,9 +27,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -64.0
-offset_top = -64.0
+offset_top = -80.0
 offset_right = 64.0
-offset_bottom = 64.0
+offset_bottom = 48.0
 grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(64, 64)
@@ -38,8 +38,8 @@ texture_normal = ExtResource("2_0ligb")
 
 [node name="Shop" type="Control" parent="."]
 anchors_preset = 0
-offset_left = 704.0
-offset_right = 1152.0
+offset_left = 656.0
+offset_right = 1156.0
 offset_bottom = 648.0
 
 [node name="Money" type="RichTextLabel" parent="Shop"]
@@ -49,20 +49,25 @@ anchor_left = 0.528
 anchor_top = 0.272
 anchor_right = 0.528
 anchor_bottom = 0.272
-offset_left = -204.544
+offset_left = -216.0
 offset_top = -0.256012
-offset_right = 204.456
+offset_right = 193.0
 offset_bottom = 22.744
 grow_horizontal = 2
-text = "Value: "
+text = "Value: 0"
 fit_content = true
 
 [node name="Product" type="RichTextLabel" parent="Shop"]
-layout_mode = 0
-offset_left = 32.0
-offset_top = 248.0
-offset_right = 168.0
-offset_bottom = 360.0
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.24
+anchor_top = 0.469
+anchor_right = 0.24
+anchor_bottom = 0.469
+offset_left = -72.0
+offset_top = -55.912
+offset_right = 40.0
+offset_bottom = 56.088
 text = "Hello1
 
 Hello2
@@ -73,16 +78,62 @@ scroll_active = false
 [node name="Buy" type="Button" parent="Shop"]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.607
-anchor_top = 0.444
-anchor_right = 0.607
-anchor_bottom = 0.444
-offset_left = -87.936
-offset_top = 0.287964
-offset_right = 88.064
-offset_bottom = 31.288
+anchor_left = 0.784
+anchor_top = 0.469
+anchor_right = 0.784
+anchor_bottom = 0.469
+offset_left = -120.0
+offset_top = -31.912
+offset_right = -8.00003
+offset_bottom = -0.912018
 grow_horizontal = 2
 text = "Купить"
+
+[node name="Price" type="RichTextLabel" parent="Shop"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.776
+anchor_top = 0.536
+anchor_right = 0.776
+anchor_bottom = 0.536
+offset_left = -116.0
+offset_top = -27.328
+offset_right = 4.0
+offset_bottom = -4.328
+text = "10 x 100 = 1000"
+fit_content = true
+
+[node name="Modificator" type="GridContainer" parent="Shop"]
+layout_mode = 0
+offset_left = 160.0
+offset_top = 256.0
+offset_right = 250.0
+offset_bottom = 360.0
+columns = 2
+
+[node name="Mod_1" type="Button" parent="Shop/Modificator"]
+layout_mode = 2
+text = "+1"
+
+[node name="Mod_n1" type="Button" parent="Shop/Modificator"]
+layout_mode = 2
+text = "-1"
+
+[node name="Mod_10" type="Button" parent="Shop/Modificator"]
+layout_mode = 2
+text = "+10"
+
+[node name="Mod_n10" type="Button" parent="Shop/Modificator"]
+layout_mode = 2
+text = "-10"
+
+[node name="Mod_100" type="Button" parent="Shop/Modificator"]
+layout_mode = 2
+text = "+100"
+
+[node name="Mod_n100" type="Button" parent="Shop/Modificator"]
+layout_mode = 2
+text = "-100"
 
 [connection signal="button_down" from="Field/Click" to="." method="_on_texture_button_button_down"]
 [connection signal="mouse_entered" from="Shop/Product" to="." method="_on_product_mouse_entered"]
@@ -90,3 +141,9 @@ text = "Купить"
 [connection signal="button_down" from="Shop/Buy" to="." method="_on_buy_button_down"]
 [connection signal="mouse_entered" from="Shop/Buy" to="." method="_on_buy_mouse_entered"]
 [connection signal="mouse_exited" from="Shop/Buy" to="." method="_on_buy_mouse_exited"]
+[connection signal="button_down" from="Shop/Modificator/Mod_1" to="." method="_on_mod_1_button_down"]
+[connection signal="button_down" from="Shop/Modificator/Mod_n1" to="." method="_on_mod_n_1_button_down"]
+[connection signal="button_down" from="Shop/Modificator/Mod_10" to="." method="_on_mod_10_button_down"]
+[connection signal="button_down" from="Shop/Modificator/Mod_n10" to="." method="_on_mod_n_10_button_down"]
+[connection signal="button_down" from="Shop/Modificator/Mod_100" to="." method="_on_mod_100_button_down"]
+[connection signal="button_down" from="Shop/Modificator/Mod_n100" to="." method="_on_mod_n_100_button_down"]

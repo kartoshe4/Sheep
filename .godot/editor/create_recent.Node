@@ -1,6 +1,7 @@
-TextureButton
+Button
+GridContainer
 RichTextLabel
+TextureButton
 AspectRatioContainer
 ScrollContainer
 VBoxContainer
-Button

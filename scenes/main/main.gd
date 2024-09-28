@@ -1,7 +1,9 @@
 extends Control
 
 var money = 0
-var mod = 1
+var mod_money = 1
+
+var mod_product = 1
 
 var wheel = 0
 var is_mouse_entered = false
@@ -53,13 +55,23 @@ func moving(delta: float):
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	
+	if mod_product < 1:
+		mod_product = 1
+	
 	turn()
 	moving(delta)
+	
 	$Shop/Product.clear()
 	for i in products:
 		$Shop/Product.add_text(i.text + "\n\n")
 	$Shop/Money.clear()
 	$Shop/Money.append_text("Money: " + str(money))
+	
+	$Shop/Price.clear()
+	$Shop/Price.append_text(str(products[1].price) + " x " + 
+	str(mod_product) + " = " + str(products[1].price * mod_product))
+	
 	if is_mouse_entered:
 		if wheel > 0:
 			shift_products_up()
@@ -77,7 +89,7 @@ func _input(event: InputEvent) -> void:
 
 
 func _on_texture_button_button_down() -> void:
-	money += mod
+	money += mod_money
 	random_position = Vector2(
 		clamp(randi() % int($Field.size.x), 0, int($Field.size.x)),
 		clamp(randi() % int($Field.size.y), 0, int($Field.size.y))
@@ -106,13 +118,37 @@ func _on_buy_mouse_exited() -> void:
 
 
 func _on_buy_button_down() -> void:
-	if money >= products[1].price:
-		money -= products[1].price
+	if money >= products[1].price * mod_product:
+		money -= products[1].price * mod_product
 		if products[1].text == "Product1":
-			mod += 1
+			mod_money += 1 * mod_product
 		elif products[1].text == "Product2":
-			mod += 10
+			mod_money += 10 * mod_product
 		elif products[1].text == "Product3":
-			mod += 100
+			mod_money += 100 * mod_product
 		elif products[1].text == "Product4":
-			mod += 1000
+			mod_money += 1000 * mod_product
+
+
+func _on_mod_1_button_down() -> void:
+	mod_product += 1
+
+
+func _on_mod_n_1_button_down() -> void:
+	mod_product -= 1
+
+
+func _on_mod_10_button_down() -> void:
+	mod_product += 10
+
+
+func _on_mod_n_10_button_down() -> void:
+	mod_product -= 10
+
+
+func _on_mod_100_button_down() -> void:
+	mod_product += 100
+
+
+func _on_mod_n_100_button_down() -> void:
+	mod_product -= 100
