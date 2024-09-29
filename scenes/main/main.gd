@@ -16,6 +16,8 @@ var s = 1
 var random_position = Vector2()
 var start_position = Vector2()
 
+var is_second_sheep = false
+
 var products = []
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -23,6 +25,8 @@ func _ready() -> void:
 	products.append(Product.new(100, "Product2"))
 	products.append(Product.new(1000, "Product3"))
 	products.append(Product.new(10000, "Product4"))
+	products.append(Product.new(10000, "Second Sheep"))
+	products.append(Product.new(int(pow(10, 15)), "flag"))
 
 
 func shift_products_up() -> void:
@@ -43,14 +47,30 @@ func shift_products_down() -> void:
 
 func turn() -> void:
 	rotat += mod_rotat
-	$Field/Click.set_rotation_degrees(rotat)
+	$Field/Sheep.set_rotation_degrees(rotat)
 	if (abs(rotat) >= 30): mod_rotat *= -1
 
 
-func moving(delta: float):
+func moving(delta: float) -> void:
 	if (t < 1):
 		t += delta * 1200 / s
-		$Field/Click.position = start_position.lerp(random_position, t)
+		$Field/Sheep.position = start_position.lerp(random_position, t)
+
+func output(num: int) -> String:
+	if num / int(pow(10, 15)) > 0:
+		return str(num/int(pow(10, 15))) + '.'\
+		 + str((num%int(pow(10, 15))-num%int(pow(10, 15)))/int(pow(10, 15))) + 'q'
+	elif num / 1000000000 > 0:
+		return str(num/1000000000) + '.'\
+		 + str((num%1000000000-num%100000000)/1000000000) + 'b'
+	elif num / 1000000 > 0:
+		return str(num/1000000) + '.'\
+		 + str((num%1000000-num%100000)/1000000) + 'm'
+	elif num / 1000 > 0:
+		return str(num/1000) + '.'\
+		 + str((num%1000-num%100)/100) + 'k'
+	else:
+		return str(num)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -66,11 +86,14 @@ func _process(delta: float) -> void:
 	for i in products:
 		$Shop/Product.add_text(i.text + "\n\n")
 	$Shop/Money.clear()
-	$Shop/Money.append_text("Money: " + str(money))
+	$Shop/Money.append_text("Money: " + output(money))
+	
+	$Shop/Click.clear()
+	$Shop/Click.append_text("Mod Click: " + output(mod_money))
 	
 	$Shop/Price.clear()
-	$Shop/Price.append_text(str(products[1].price) + " x " + 
-	str(mod_product) + " = " + str(products[1].price * mod_product))
+	$Shop/Price.append_text(output(products[1].price) + " x " + 
+	output(mod_product) + " = " + output(products[1].price * mod_product))
 	
 	if is_mouse_entered:
 		if wheel > 0:
@@ -88,13 +111,13 @@ func _input(event: InputEvent) -> void:
 			wheel -= 1
 
 
-func _on_texture_button_button_down() -> void:
+func _on_sheep_button_down() -> void:
 	money += mod_money
 	random_position = Vector2(
 		clamp(randi() % int($Field.size.x), 0, int($Field.size.x)),
 		clamp(randi() % int($Field.size.y), 0, int($Field.size.y))
 	)
-	start_position = $Field/Click.position
+	start_position = $Field/Sheep.position
 	t = 0.0
 	s = (random_position - start_position).length()
 	if s == 0:
@@ -104,14 +127,11 @@ func _on_texture_button_button_down() -> void:
 func _on_product_mouse_entered() -> void:
 	is_mouse_entered = true
 
-
 func _on_product_mouse_exited() -> void:
 	is_mouse_entered = false
 
-
 func _on_buy_mouse_entered() -> void:
 	is_mouse_entered = true
-
 
 func _on_buy_mouse_exited() -> void:
 	is_mouse_entered = false
@@ -128,27 +148,24 @@ func _on_buy_button_down() -> void:
 			mod_money += 100 * mod_product
 		elif products[1].text == "Product4":
 			mod_money += 1000 * mod_product
+		elif products[1].text == "Second Sheep":
+			mod_money += 1000 * mod_product
 
 
 func _on_mod_1_button_down() -> void:
 	mod_product += 1
 
-
 func _on_mod_n_1_button_down() -> void:
 	mod_product -= 1
-
 
 func _on_mod_10_button_down() -> void:
 	mod_product += 10
 
-
 func _on_mod_n_10_button_down() -> void:
 	mod_product -= 10
 
-
 func _on_mod_100_button_down() -> void:
 	mod_product += 100
-
 
 func _on_mod_n_100_button_down() -> void:
 	mod_product -= 100

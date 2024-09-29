@@ -19,7 +19,7 @@ offset_top = 64.0
 offset_right = 600.0
 offset_bottom = 576.0
 
-[node name="Click" type="TextureButton" parent="Field"]
+[node name="Sheep" type="TextureButton" parent="Field"]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -36,6 +36,23 @@ pivot_offset = Vector2(64, 64)
 focus_mode = 0
 texture_normal = ExtResource("2_0ligb")
 
+[node name="Sheep2" type="TextureButton" parent="Field"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -512.0
+offset_top = -88.0
+offset_right = -384.0
+offset_bottom = 40.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(64, 64)
+focus_mode = 0
+texture_normal = ExtResource("2_0ligb")
+
 [node name="Shop" type="Control" parent="."]
 anchors_preset = 0
 offset_left = 656.0
@@ -45,17 +62,27 @@ offset_bottom = 648.0
 [node name="Money" type="RichTextLabel" parent="Shop"]
 layout_mode = 1
 anchors_preset = -1
-anchor_left = 0.528
+anchor_left = 0.288
 anchor_top = 0.272
-anchor_right = 0.528
+anchor_right = 0.288
 anchor_bottom = 0.272
-offset_left = -216.0
-offset_top = -0.256012
-offset_right = 193.0
-offset_bottom = 22.744
+offset_left = -96.0
+offset_top = -24.256
+offset_right = 96.0
+offset_bottom = -1.256
 grow_horizontal = 2
 text = "Value: 0"
 fit_content = true
+
+[node name="Click" type="RichTextLabel" parent="Shop"]
+layout_mode = 0
+offset_left = 48.0
+offset_top = 192.0
+offset_right = 272.0
+offset_bottom = 216.0
+text = "Mod Click: "
+fit_content = true
+scroll_active = false
 
 [node name="Product" type="RichTextLabel" parent="Shop"]
 layout_mode = 1
@@ -135,7 +162,7 @@ text = "+100"
 layout_mode = 2
 text = "-100"
 
-[connection signal="button_down" from="Field/Click" to="." method="_on_texture_button_button_down"]
+[connection signal="button_down" from="Field/Sheep" to="." method="_on_sheep_button_down"]
 [connection signal="mouse_entered" from="Shop/Product" to="." method="_on_product_mouse_entered"]
 [connection signal="mouse_exited" from="Shop/Product" to="." method="_on_product_mouse_exited"]
 [connection signal="button_down" from="Shop/Buy" to="." method="_on_buy_button_down"]
