@@ -1,7 +1,10 @@
 extends Control
 
-var money = 100000000
+var money = 102000
+var money_per_second = 0
 var mod_money = 1
+
+var casino
 
 var mod_product = 1
 
@@ -27,15 +30,20 @@ var start_position_2 = Vector2()
 var products = []
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	$Backsound.play()
+	$Field/Hay.visible = false
+	$Field/Hay2.visible = false
 	
+	$Backsound.play()
+	$Timer.start()
 	start_position_2 = Vector2($Field/Sheep2.position)
 	
-	products.append(Product.new(10, "Product1"))
-	products.append(Product.new(100, "Product2"))
-	products.append(Product.new(1000, "Product3"))
-	products.append(Product.new(10000, "Product4"))
-	products.append(Product.new(10000, "Second Sheep"))
+	products.append(Product.new(10, "+1 per click"))
+	products.append(Product.new(150, "+1 per second"))
+	products.append(Product.new(1000, "Hay"))
+	products.append(Product.new(100000, "Second Sheep"))
+	products.append(Product.new(0, "Casino(x2)"))
+	products.append(Product.new(0, "Casino(x3)"))
+	products.append(Product.new(0, "Casino(x10)"))
 	products.append(Product.new(int(pow(10, 15)), "flag"))
 
 
@@ -102,7 +110,9 @@ func _process(delta: float) -> void:
 		$Backsound.play()
 	
 	if mod_product < 1 or products[1].text == "Second Sheep"\
-		or products[1].text == "flag":
+		or products[1].text == "flag" or products[1].text == "Hay"\
+		or products[1].text == "Casino(x2)" or products[1].text == "Casino(x3)"\
+		or products[1].text == "Casino(x10)":
 		mod_product = 1
 	
 	turn_1()
@@ -125,11 +135,11 @@ func _process(delta: float) -> void:
 	
 	if is_mouse_entered:
 		if wheel > 0:
-			shift_products_up()
+			shift_products_down()
 			$Shop/Turn.play()
 			wheel -= 2
 		elif wheel < 0:
-			shift_products_down()
+			shift_products_up()
 			$Shop/Turn.play()
 			wheel += 2
 
@@ -155,6 +165,7 @@ func _on_sheep_button_down() -> void:
 		clamp(randi() % int($Field.size.x), 0, int($Field.size.x)),
 		clamp(randi() % int($Field.size.y), 0, int($Field.size.y))
 	)
+	$Field/Hay.position = random_position_1
 	start_position_1 = $Field/Sheep.position
 	t_1 = 0.0
 	s_1 = (random_position_1 - start_position_1).length()
@@ -169,6 +180,7 @@ func _on_sheep_2_button_down() -> void:
 		clamp(randi() % int($Field.size.x), 0, int($Field.size.x)),
 		clamp(randi() % int($Field.size.y), 0, int($Field.size.y))
 	)
+	$Field/Hay2.position = random_position_2
 	start_position_2 = $Field/Sheep2.position
 	t_2 = 0.0
 	s_2 = (random_position_2 - start_position_2).length()
@@ -193,14 +205,27 @@ func _on_buy_button_down() -> void:
 	if money >= products[1].price * mod_product:
 		$Shop/Purchase.play()
 		money -= products[1].price * mod_product
-		if products[1].text == "Product1":
+		if products[1].text == "+1 per click":
 			mod_money += 1 * mod_product
-		elif products[1].text == "Product2":
-			mod_money += 10 * mod_product
-		elif products[1].text == "Product3":
-			mod_money += 100 * mod_product
-		elif products[1].text == "Product4":
-			mod_money += 1000 * mod_product
+		elif products[1].text == "+1 per second":
+			money_per_second += 1 * mod_product
+		elif products[1].text == "Hay":
+				$Field/Hay.visible = true
+				$Field/Hay2.visible = true
+				mod_money *= 2
+				products.pop_at(1)
+		elif products[1].text == "Casino(x2)":
+			casino = randi() % 101 >= 30
+			money = money * 2 * int(casino)
+			print(casino)
+		elif products[1].text == "Casino(x3)":
+			casino = randi() % 101 >= 50
+			money = money * 3 * int(casino)
+			print(casino)
+		elif products[1].text == "Casino(x10)":
+			casino = randi() % 101 >= 90
+			money = money * 10 * int(casino)
+			print(casino)
 		elif products[1].text == "Second Sheep":
 			$Field/Sheep2.position = Vector2(0, 0)
 			products.pop_at(1)
@@ -223,3 +248,8 @@ func _on_mod_100_button_down() -> void:
 
 func _on_mod_n_100_button_down() -> void:
 	mod_product -= 100
+
+
+func _on_timer_timeout() -> void:
+	$Timer.start()
+	money += money_per_second

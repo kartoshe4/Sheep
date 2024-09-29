@@ -1,5 +1,5 @@
 ea4bc82a6ad023ab7ee23ee620429895
-::res://::1727605715
+::res://::1727628192
 icon.svg::CompressedTexture2D::1228262275844698405::1727517219::1727518325::1::::<><>::
 Product.gd::GDScript::-1::1727511549::0::1::::Product<>RefCounted<>::
 ::res://resourse/::1727605715
@@ -9,12 +9,13 @@ kick.mp3::AudioStreamMP3::4400437455938044689::1727605903::1727605903::1::::<><>
 purchase.mp3::AudioStreamMP3::438713919899839790::1727604747::1727604752::1::::<><>::
 sheep.mp3::AudioStreamMP3::2645118407557348848::1727605713::1727605715::1::::<><>::
 turn.mp3::AudioStreamMP3::2711857059421665560::1727602682::1727602683::1::::<><>::
-::res://resourse/sprites/::1727602466
+::res://resourse/sprites/::1727630928
+hay.png::CompressedTexture2D::8602472160376940366::1727630904::1727630932::1::::<><>::
 icon_button.png::CompressedTexture2D::6991567187300098745::1727539573::1727602466::1::::<><>::
 ::res://scenes/::1727446733
-::res://scenes/main/::1727605718
-main.gd::GDScript::-1::1727605128::0::1::::<>Control<>::
-main.tscn::PackedScene::8483142952417911570::1727605718::0::1::::<><>::res://scenes/main/main.gd<>uid://c6u1dcfb7335n::::res://resourse/sprites/icon_button.png<>uid://c82s03wawhob6::::res://resourse/sounds/backsound.mp3<>uid://bevv5ilk6m5j5::::res://resourse/sounds/turn.mp3<>uid://bdxkyjb5frv7e::::res://resourse/sounds/sheep.mp3<>uid://girs3u4diflu::::res://resourse/sounds/purchase.mp3
-::res://scenes/start/::1727605718
+::res://scenes/main/::1727630746
+main.gd::GDScript::-1::1727630745::0::1::::<>Control<>::
+main.tscn::PackedScene::8483142952417911570::1727630746::0::1::::<><>::res://scenes/main/main.gd<>uid://c6u1dcfb7335n::::res://resourse/sprites/icon_button.png<>uid://c82s03wawhob6::::res://resourse/sounds/backsound.mp3<>uid://bevv5ilk6m5j5::::res://resourse/sounds/turn.mp3<>uid://bdxkyjb5frv7e::::res://resourse/sounds/sheep.mp3<>uid://b3xutdwl6eqkn::::res://resourse/sounds/kick.mp3<>uid://girs3u4diflu::::res://resourse/sounds/purchase.mp3<>uid://dutdpvl4qtuw1::::res://resourse/sprites/hay.png
+::res://scenes/start/::1727630745
 start.gd::GDScript::-1::1727447292::0::1::::<>Control<>::
-start.tscn::PackedScene::220803177649459884::1727605718::0::1::::<><>::res://scenes/start/start.gd
+start.tscn::PackedScene::220803177649459884::1727630932::0::1::::<><>::res://scenes/start/start.gd
