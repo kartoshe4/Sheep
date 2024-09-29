@@ -1,6 +1,6 @@
 extends Control
 
-var money = 1000000
+var money = 100000000
 var mod_money = 1
 
 var mod_product = 1
@@ -27,6 +27,8 @@ var start_position_2 = Vector2()
 var products = []
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	$Backsound.play()
+	
 	start_position_2 = Vector2($Field/Sheep2.position)
 	
 	products.append(Product.new(10, "Product1"))
@@ -96,6 +98,8 @@ func output(num: int) -> String:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	if not($Backsound.is_playing()):
+		$Backsound.play()
 	
 	if mod_product < 1 or products[1].text == "Second Sheep"\
 		or products[1].text == "flag":
@@ -137,7 +141,15 @@ func _input(event: InputEvent) -> void:
 			wheel -= 1
 
 
+func sheep():
+	if randi() % 20 == 12:
+		$Sheep.play()
+	else:
+		$Kick.play()
+
+
 func _on_sheep_button_down() -> void:
+	sheep()
 	money += mod_money
 	random_position_1 = Vector2(
 		clamp(randi() % int($Field.size.x), 0, int($Field.size.x)),
@@ -151,6 +163,7 @@ func _on_sheep_button_down() -> void:
 
 
 func _on_sheep_2_button_down() -> void:
+	sheep()
 	money += mod_money
 	random_position_2 = Vector2(
 		clamp(randi() % int($Field.size.x), 0, int($Field.size.x)),
@@ -178,6 +191,7 @@ func _on_buy_mouse_exited() -> void:
 
 func _on_buy_button_down() -> void:
 	if money >= products[1].price * mod_product:
+		$Shop/Purchase.play()
 		money -= products[1].price * mod_product
 		if products[1].text == "Product1":
 			mod_money += 1 * mod_product
