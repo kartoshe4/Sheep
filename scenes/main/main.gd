@@ -1,6 +1,6 @@
 extends Control
 
-var money = 10000000
+var money = 1000000
 var mod_money = 1
 
 var mod_product = 1
@@ -97,7 +97,8 @@ func output(num: int) -> String:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	
-	if mod_product < 1:
+	if mod_product < 1 or products[1].text == "Second Sheep"\
+		or products[1].text == "flag":
 		mod_product = 1
 	
 	turn_1()
@@ -121,13 +122,15 @@ func _process(delta: float) -> void:
 	if is_mouse_entered:
 		if wheel > 0:
 			shift_products_up()
+			$Shop/Turn.play()
 			wheel -= 2
 		elif wheel < 0:
 			shift_products_down()
+			$Shop/Turn.play()
 			wheel += 2
 
 func _input(event: InputEvent) -> void:
-	if event is InputEventMouseButton:
+	if not($Shop/Turn.is_playing()) and event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_WHEEL_UP:
 			wheel += 1
 		elif  event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
