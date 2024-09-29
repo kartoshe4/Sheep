@@ -215,17 +215,23 @@ func _on_buy_button_down() -> void:
 				mod_money *= 2
 				products.pop_at(1)
 		elif products[1].text == "Casino(x2)":
-			casino = randi() % 101 >= 30
-			money = money * 2 * int(casino)
-			print(casino)
+			casino = randi() % 2
+			if (casino):
+				money *= 2
+			else:
+				money /= 2
 		elif products[1].text == "Casino(x3)":
-			casino = randi() % 101 >= 50
-			money = money * 3 * int(casino)
-			print(casino)
+			casino = randi() % 3 / 2
+			if (casino):
+				money *= 3
+			else:
+				money /= 3
 		elif products[1].text == "Casino(x10)":
-			casino = randi() % 101 >= 90
-			money = money * 10 * int(casino)
-			print(casino)
+			casino = randi() % 10 / 9
+			if (casino):
+				money *= 10
+			else:
+				money /= 10
 		elif products[1].text == "Second Sheep":
 			$Field/Sheep2.position = Vector2(0, 0)
 			products.pop_at(1)
