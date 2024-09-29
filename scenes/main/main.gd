@@ -1,6 +1,6 @@
 extends Control
 
-var money = 0
+var money = 10000000
 var mod_money = 1
 
 var mod_product = 1
@@ -8,19 +8,27 @@ var mod_product = 1
 var wheel = 0
 var is_mouse_entered = false
 
-var rotat = 0
-var mod_rotat = 0.15
+var rotat_1 = 0
+var mod_rotat_1 = 0.15
 
-var t = 0.0
-var s = 1
-var random_position = Vector2()
-var start_position = Vector2()
+var rotat_2 = 10
+var mod_rotat_2 = 0.15
 
-var is_second_sheep = false
+var t_1 = 0.0
+var s_1 = 1
+var random_position_1 = Vector2()
+var start_position_1 = Vector2()
+
+var t_2 = 0.0
+var s_2 = 1
+var random_position_2 = Vector2()
+var start_position_2 = Vector2()
 
 var products = []
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	start_position_2 = Vector2($Field/Sheep2.position)
+	
 	products.append(Product.new(10, "Product1"))
 	products.append(Product.new(100, "Product2"))
 	products.append(Product.new(1000, "Product3"))
@@ -45,16 +53,29 @@ func shift_products_down() -> void:
 		products[0] = last_product  # Перемещаем последний элемент на первое место
 
 
-func turn() -> void:
-	rotat += mod_rotat
-	$Field/Sheep.set_rotation_degrees(rotat)
-	if (abs(rotat) >= 30): mod_rotat *= -1
+func turn_1() -> void:
+	rotat_1 += mod_rotat_1
+	$Field/Sheep.set_rotation_degrees(rotat_1)
+	if (abs(rotat_1) >= 30): mod_rotat_1 *= -1
 
 
-func moving(delta: float) -> void:
-	if (t < 1):
-		t += delta * 1200 / s
-		$Field/Sheep.position = start_position.lerp(random_position, t)
+func turn_2() -> void:
+	rotat_2 += mod_rotat_2
+	$Field/Sheep2.set_rotation_degrees(rotat_2)
+	if (abs(rotat_2) >= 30): mod_rotat_2 *= -1
+
+
+func moving_1(delta: float) -> void:
+	if (t_1 < 1):
+		t_1 += delta * 1200 / s_1
+		$Field/Sheep.position = start_position_1.lerp(random_position_1, t_1)
+
+
+func moving_2(delta: float) -> void:
+	if (t_2 < 1):
+		t_2 += delta * 1200 / s_2
+		$Field/Sheep2.position = start_position_2.lerp(random_position_2, t_2)
+
 
 func output(num: int) -> String:
 	if num / int(pow(10, 15)) > 0:
@@ -79,8 +100,10 @@ func _process(delta: float) -> void:
 	if mod_product < 1:
 		mod_product = 1
 	
-	turn()
-	moving(delta)
+	turn_1()
+	turn_2()
+	moving_1(delta)
+	moving_2(delta)
 	
 	$Shop/Product.clear()
 	for i in products:
@@ -113,15 +136,28 @@ func _input(event: InputEvent) -> void:
 
 func _on_sheep_button_down() -> void:
 	money += mod_money
-	random_position = Vector2(
+	random_position_1 = Vector2(
 		clamp(randi() % int($Field.size.x), 0, int($Field.size.x)),
 		clamp(randi() % int($Field.size.y), 0, int($Field.size.y))
 	)
-	start_position = $Field/Sheep.position
-	t = 0.0
-	s = (random_position - start_position).length()
-	if s == 0:
-		s = 1
+	start_position_1 = $Field/Sheep.position
+	t_1 = 0.0
+	s_1 = (random_position_1 - start_position_1).length()
+	if s_1 == 0:
+		s_1 = 1
+
+
+func _on_sheep_2_button_down() -> void:
+	money += mod_money
+	random_position_2 = Vector2(
+		clamp(randi() % int($Field.size.x), 0, int($Field.size.x)),
+		clamp(randi() % int($Field.size.y), 0, int($Field.size.y))
+	)
+	start_position_2 = $Field/Sheep2.position
+	t_2 = 0.0
+	s_2 = (random_position_2 - start_position_2).length()
+	if s_2 == 0:
+		s_2 = 1
 
 
 func _on_product_mouse_entered() -> void:
@@ -149,7 +185,8 @@ func _on_buy_button_down() -> void:
 		elif products[1].text == "Product4":
 			mod_money += 1000 * mod_product
 		elif products[1].text == "Second Sheep":
-			mod_money += 1000 * mod_product
+			$Field/Sheep2.position = Vector2(0, 0)
+			products.pop_at(1)
 
 
 func _on_mod_1_button_down() -> void:
