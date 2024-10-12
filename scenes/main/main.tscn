@@ -250,15 +250,22 @@ text = "-100"
 
 [node name="Label" type="Label" parent="Shop"]
 layout_mode = 0
-offset_left = 112.0
-offset_top = 448.0
-offset_right = 368.0
-offset_bottom = 504.0
+offset_left = 48.0
+offset_top = 392.0
+offset_right = 432.0
+offset_bottom = 448.0
 horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="Win" type="AudioStreamPlayer" parent="Shop"]
 stream = ExtResource("13_pvjii")
+
+[node name="TextEdit" type="TextEdit" parent="Shop"]
+layout_mode = 0
+offset_left = 48.0
+offset_top = 512.0
+offset_right = 448.0
+offset_bottom = 588.0
 
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
 [connection signal="button_down" from="Field/Sheep" to="." method="_on_sheep_button_down"]

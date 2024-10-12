@@ -5,12 +5,13 @@ extends Control
 #var section_name := "game" #!!!
 
 var aes = AESContext.new()
-var text_link = "user://game.save"
+var text_link = "/home/ilya/Документы/Hackaton/game.save"
 var array = []
 
+var edit_text
 var text
 
-var money = 10000000
+var money = 10000000000000
 var money_per_second = 0
 var mod_money = 1
 
@@ -47,37 +48,7 @@ var products = []
 
 var is_rank = false
 
-var damage = 0
-#func save_game() -> void:
-	#config.set_value(section_name, "money", money)
-	#config.set_value(section_name, "money_per_second", money_per_second)
-	#config.set_value(section_name, "mod_money", mod_money)
-	#config.set_value(section_name, "sheep1_pos", sheep1_pos)
-	#config.set_value(section_name, "sheep2_pos", sheep2_pos)
-	#config.set_value(section_name, "hay1_vis", hay1_vis)
-	#config.set_value(section_name, "hay2_vis", hay2_vis)
-	#config.save(path_to_save_file)
-#
-#func save_encrypt_game() -> void:
-	#config.set_value(section_name, "money", money)
-	#config.set_value(section_name, "money_per_second", money_per_second)
-	#config.set_value(section_name, "mod_money", mod_money)
-	#config.set_value(section_name, "sheep1_pos", sheep1_pos)
-	#config.set_value(section_name, "sheep2_pos", sheep2_pos)
-	#config.set_value(section_name, "hay1_vis", hay1_vis)
-	#config.set_value(section_name, "hay2_vis", hay2_vis)
-	#config.save_encrypted_pass(path_to_save_file, "12345")
-#
-#func load_game() -> void:
-	#config = ConfigFile.new()
-	#config.load_encrypted_pass(path_to_save_file, "12345")
-	#money = config.get_value(section_name, "money", money)
-	#money_per_second = config.get_value(section_name, "money_per_second", money_per_second)
-	#mod_money = config.get_value(section_name, "mod_money", mod_money)
-	#$Field/Sheep.position = config.get_value(section_name, "sheep1_pos", sheep1_pos)
-	#$Field/Sheep2.position = config.get_value(section_name, "sheep2_pos", sheep2_pos)
-	#$Field/Hay.visible = config.get_value(section_name, "hay1_vis", hay1_vis)
-	#$Field/Hay2.visible = config.get_value(section_name, "hay2_vis", hay2_vis)
+var damage = 10000
 
 func save_to_file(link):
 	array.clear()
@@ -91,14 +62,13 @@ func save_to_file(link):
 	array.append(sheep2_pos.y)
 	array.append(hay1_vis)
 	array.append(hay2_vis)
+	array.append(damage)
 	file.store_string(encrypt(array))
 
 func load_from_file(link):
 	var file = FileAccess.open(link, FileAccess.READ)
 	text = file.get_as_text()
 	array = decrypt(text)
-	for i in array:
-		print(i)
 	if array.size() != 0:
 		money = array[0]
 		money_per_second = array[1]
@@ -113,6 +83,7 @@ func load_from_file(link):
 			$Field/Sheep2.position = Vector2(-1000, 1000)
 		$Field/Hay.visible = array[7]
 		$Field/Hay2.visible = array[8]
+		damage = array[9]
 	else:
 		save_to_file(text_link)
 
@@ -140,16 +111,52 @@ func hex_to_decimal(hex_string: String) -> int:
 	# Перебираем каждый символ в строке
 	for i in range(length):
 		var char = hex_string[length - 1 - i]  # Берем символ с конца
-		var value = 0
-
-		# Определяем числовое значение символа
-		if char >= '0' and char <= '9':
-			value = int(char) - int('0')   # Для цифр
-		elif char >= 'A' and char <= 'F':
-			value = int(char) - int('A') + 10   # Для заглавных букв
-
+		
+		var let = {
+			"0": 0,
+			"1": 1,
+			"2": 2,
+			"3": 3,
+			"4": 4,
+			"5": 5,
+			"6": 6,
+			"7": 7,
+			"8": 8,
+			"9": 9,
+			"A": 10,
+			"B": 11,
+			"C": 12,
+			"D": 13,
+			"E": 14,
+			"F": 15,
+			"G": 16,
+			"H": 17,
+			"I": 18,
+			"J": 19,
+			"K": 20,
+			"L": 21,
+			"M": 22,
+			"N": 23,
+			"O": 24,
+			"P": 25,
+			"Q": 26,
+			"R": 27,
+			"S": 28,
+			"T": 29,
+			"U": 30,
+			"V": 31,
+			"W": 32,
+			"X": 33,
+			"Y": 34,
+			"Z": 35
+		}
+		if not (char in let):
+			var file = FileAccess.open(text_link, FileAccess.WRITE)
+			file.store_string("")
+			get_tree().quit()
 		# Добавляем значение к десятичному результату
-		decimal_value += value * pow(16, i)
+		else:
+			decimal_value += let[char] * pow(36, i)
 
 	return decimal_value
 
@@ -174,16 +181,16 @@ func encrypt(data: Array) -> String:
 func decrypt(data):
 	var arr = []
 	var size = hex_to_decimal(data.substr(0,1))
-	print(int(0xF5))
 	if size > 0:
 		for i in range(1, data.length(), size):
 			arr.append(hex_to_decimal(data.substr(i, size)))
-	print(arr)
 	return arr
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	edit_text = $Shop/TextEdit
+	
 	$Field/Hay.visible = false
 	$Field/Hay2.visible = false
 	
@@ -263,9 +270,17 @@ func output(num: int) -> String:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	
+	if edit_text.text == "ObshchFackt":
+		$Shop/Win.play()
+		$Shop/Label.text = "Теперь вы можете купить модификатор к урону"
+		is_rank = true
+		edit_text.visible = false
+		edit_text.clear()
 	save_to_file(text_link)
 	if is_rank:
 		products.append(Product.new(10000000, "+1 damage"))
+		is_rank = false
 	
 	sheep1_pos = $Field/Sheep.position
 	sheep2_pos = $Field/Sheep2.position
@@ -377,10 +392,13 @@ func _on_buy_button_down() -> void:
 		elif products[1].text == "+1 per second":
 			money_per_second += 1 * mod_product
 		elif products[1].text == "Hay":
+			if not $Field/Hay.visible:
 				$Field/Hay.visible = true
 				$Field/Hay2.visible = true
 				mod_money *= 2
-				products.pop_at(1)
+			else:
+				money += 1000
+			products.pop_at(1)
 		elif products[1].text == "Casino(x2)":
 			casino = randi() % 2
 			if (casino):

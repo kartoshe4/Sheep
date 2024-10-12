@@ -44,7 +44,7 @@ func encrypt_data() -> void:
 	var extended_key = pad_edges(key)
 
 	# Шифрование в режиме ECB
-	aes.start(AESContext.MODE_ECB_ENCRYPT, extended_key.to_utf8_buffer())
+	aes.start(AESContext.MODE_ECB_ENCRYPT, extended_key.to_utf8_buffer(), iv.to_utf8_buffer())
 	encrypted_ecb = aes.update(data.to_utf8_buffer())
 	aes.finish()
 
