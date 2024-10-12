@@ -1,13 +1,18 @@
-[gd_scene load_steps=9 format=3 uid="uid://ds4keir6tqmic"]
+[gd_scene load_steps=14 format=3 uid="uid://ds4keir6tqmic"]
 
 [ext_resource type="Script" path="res://scenes/main/main.gd" id="1_qp6bg"]
 [ext_resource type="Texture2D" uid="uid://c6u1dcfb7335n" path="res://resourse/sprites/icon_button.png" id="2_0ligb"]
+[ext_resource type="Script" path="res://scripts/cipher.gd" id="2_ldgny"]
 [ext_resource type="AudioStream" uid="uid://c82s03wawhob6" path="res://resourse/sounds/backsound.mp3" id="2_ub01d"]
 [ext_resource type="AudioStream" uid="uid://bevv5ilk6m5j5" path="res://resourse/sounds/turn.mp3" id="3_q8p31"]
 [ext_resource type="AudioStream" uid="uid://bdxkyjb5frv7e" path="res://resourse/sounds/sheep.mp3" id="3_xnt61"]
 [ext_resource type="AudioStream" uid="uid://b3xutdwl6eqkn" path="res://resourse/sounds/kick.mp3" id="4_cg6ba"]
 [ext_resource type="AudioStream" uid="uid://girs3u4diflu" path="res://resourse/sounds/purchase.mp3" id="4_vpinj"]
 [ext_resource type="Texture2D" uid="uid://dutdpvl4qtuw1" path="res://resourse/sprites/hay.png" id="5_gi1e5"]
+[ext_resource type="Texture2D" uid="uid://bkex6g0nnvne5" path="res://resourse/sprites/lawn.jpg" id="6_u5w0v"]
+[ext_resource type="Texture2D" uid="uid://gh06qteoxwq" path="res://resourse/sprites/shop-bg.png" id="9_wtwrr"]
+[ext_resource type="Texture2D" uid="uid://chmqioiltct26" path="res://resourse/sprites/shop-title.png" id="10_60nfu"]
+[ext_resource type="AudioStream" uid="uid://cku0al1lt8rey" path="res://resourse/sounds/win31.mp3" id="13_pvjii"]
 
 [node name="main" type="Control"]
 layout_mode = 3
@@ -17,6 +22,13 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_qp6bg")
+
+[node name="Cipher" type="Control" parent="."]
+visible = false
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("2_ldgny")
 
 [node name="Timer" type="Timer" parent="."]
 
@@ -33,10 +45,15 @@ volume_db = -5.0
 
 [node name="Field" type="Control" parent="."]
 anchors_preset = 0
-offset_left = 104.0
-offset_top = 64.0
-offset_right = 600.0
-offset_bottom = 576.0
+offset_left = 128.0
+offset_top = 112.0
+offset_right = 576.0
+offset_bottom = 552.0
+
+[node name="Sprite2D" type="Sprite2D" parent="Field"]
+position = Vector2(204, 212)
+scale = Vector2(2.075, 2.025)
+texture = ExtResource("6_u5w0v")
 
 [node name="Hay" type="TextureButton" parent="Field"]
 layout_mode = 1
@@ -111,6 +128,16 @@ anchors_preset = 0
 offset_left = 656.0
 offset_right = 1156.0
 offset_bottom = 648.0
+
+[node name="Sprite2D" type="Sprite2D" parent="Shop"]
+position = Vector2(246.5, 324)
+scale = Vector2(1.73741, 1.73727)
+texture = ExtResource("9_wtwrr")
+
+[node name="Sprite2D2" type="Sprite2D" parent="Shop"]
+position = Vector2(240, 80)
+scale = Vector2(2.43667, 2.43667)
+texture = ExtResource("10_60nfu")
 
 [node name="Purchase" type="AudioStreamPlayer" parent="Shop"]
 stream = ExtResource("4_vpinj")
@@ -220,6 +247,18 @@ text = "+100"
 [node name="Mod_n100" type="Button" parent="Shop/Modificator"]
 layout_mode = 2
 text = "-100"
+
+[node name="Label" type="Label" parent="Shop"]
+layout_mode = 0
+offset_left = 112.0
+offset_top = 448.0
+offset_right = 368.0
+offset_bottom = 504.0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Win" type="AudioStreamPlayer" parent="Shop"]
+stream = ExtResource("13_pvjii")
 
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
 [connection signal="button_down" from="Field/Sheep" to="." method="_on_sheep_button_down"]

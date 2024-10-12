@@ -1,6 +1,16 @@
 extends Control
 
-var money = 102000
+#var config
+#var path_to_save_file := "user://game.save"
+#var section_name := "game" #!!!
+
+var aes = AESContext.new()
+var text_link = "user://game.save"
+var array = []
+
+var text
+
+var money = 10000000
 var money_per_second = 0
 var mod_money = 1
 
@@ -10,6 +20,12 @@ var mod_product = 1
 
 var wheel = 0
 var is_mouse_entered = false
+
+var sheep1_pos = Vector2()
+var sheep2_pos = Vector2(-1000, 1000)
+
+var hay1_vis = false
+var hay2_vis = false
 
 var rotat_1 = 0
 var mod_rotat_1 = 0.15
@@ -28,10 +44,150 @@ var random_position_2 = Vector2()
 var start_position_2 = Vector2()
 
 var products = []
+
+var is_rank = false
+
+var damage = 0
+#func save_game() -> void:
+	#config.set_value(section_name, "money", money)
+	#config.set_value(section_name, "money_per_second", money_per_second)
+	#config.set_value(section_name, "mod_money", mod_money)
+	#config.set_value(section_name, "sheep1_pos", sheep1_pos)
+	#config.set_value(section_name, "sheep2_pos", sheep2_pos)
+	#config.set_value(section_name, "hay1_vis", hay1_vis)
+	#config.set_value(section_name, "hay2_vis", hay2_vis)
+	#config.save(path_to_save_file)
+#
+#func save_encrypt_game() -> void:
+	#config.set_value(section_name, "money", money)
+	#config.set_value(section_name, "money_per_second", money_per_second)
+	#config.set_value(section_name, "mod_money", mod_money)
+	#config.set_value(section_name, "sheep1_pos", sheep1_pos)
+	#config.set_value(section_name, "sheep2_pos", sheep2_pos)
+	#config.set_value(section_name, "hay1_vis", hay1_vis)
+	#config.set_value(section_name, "hay2_vis", hay2_vis)
+	#config.save_encrypted_pass(path_to_save_file, "12345")
+#
+#func load_game() -> void:
+	#config = ConfigFile.new()
+	#config.load_encrypted_pass(path_to_save_file, "12345")
+	#money = config.get_value(section_name, "money", money)
+	#money_per_second = config.get_value(section_name, "money_per_second", money_per_second)
+	#mod_money = config.get_value(section_name, "mod_money", mod_money)
+	#$Field/Sheep.position = config.get_value(section_name, "sheep1_pos", sheep1_pos)
+	#$Field/Sheep2.position = config.get_value(section_name, "sheep2_pos", sheep2_pos)
+	#$Field/Hay.visible = config.get_value(section_name, "hay1_vis", hay1_vis)
+	#$Field/Hay2.visible = config.get_value(section_name, "hay2_vis", hay2_vis)
+
+func save_to_file(link):
+	array.clear()
+	var file = FileAccess.open(link, FileAccess.WRITE)
+	array.append(money)
+	array.append(money_per_second)
+	array.append(mod_money)
+	array.append(sheep1_pos.x)
+	array.append(sheep1_pos.y)
+	array.append(sheep2_pos.x)
+	array.append(sheep2_pos.y)
+	array.append(hay1_vis)
+	array.append(hay2_vis)
+	file.store_string(encrypt(array))
+
+func load_from_file(link):
+	var file = FileAccess.open(link, FileAccess.READ)
+	text = file.get_as_text()
+	array = decrypt(text)
+	for i in array:
+		print(i)
+	if array.size() != 0:
+		money = array[0]
+		money_per_second = array[1]
+		mod_money = array[2]
+		if mod_money == 0:
+			mod_money = 1
+		$Field/Sheep.position.x = array[3]
+		$Field/Sheep.position.y = array[4]
+		$Field/Sheep2.position.x = array[5]
+		$Field/Sheep2.position.y = array[6]
+		if $Field/Sheep2.position == Vector2():
+			$Field/Sheep2.position = Vector2(-1000, 1000)
+		$Field/Hay.visible = array[7]
+		$Field/Hay2.visible = array[8]
+	else:
+		save_to_file(text_link)
+
+
+func decimal_to_base(decimal_number: int, base: int) -> String:
+	if base < 2 or base > 37:
+		return ""  # Поддерживаем только базы от 2 до 36
+
+	var result = ""
+	while decimal_number > 0:
+		var remainder = decimal_number % base
+		if remainder < 10:
+			result = str(remainder) + result
+		else:
+			result = String(char(remainder - 10 + 65)) + result  # Для значений от 10 до 35
+		decimal_number /= base
+
+	return result
+
+
+func hex_to_decimal(hex_string: String) -> int:
+	var decimal_value = 0
+	var length = hex_string.length()
+
+	# Перебираем каждый символ в строке
+	for i in range(length):
+		var char = hex_string[length - 1 - i]  # Берем символ с конца
+		var value = 0
+
+		# Определяем числовое значение символа
+		if char >= '0' and char <= '9':
+			value = int(char) - int('0')   # Для цифр
+		elif char >= 'A' and char <= 'F':
+			value = int(char) - int('A') + 10   # Для заглавных букв
+
+		# Добавляем значение к десятичному результату
+		decimal_value += value * pow(16, i)
+
+	return decimal_value
+
+
+func encrypt(data: Array) -> String:
+	var arr = []
+	for i in data:
+		arr.append(decimal_to_base(i, 36))
+	var max_size = 10
+	for i in arr:
+		if (i.length() > max_size):
+			max_size = i.length()
+	for i in range(arr.size()):
+		while (arr[i].length() < max_size):
+			arr[i] = '0' + arr[i]
+	arr.insert(0, decimal_to_base(max_size, 16))
+	var d = ""
+	for i in arr:
+		d += str(i)
+	return str(d)
+
+func decrypt(data):
+	var arr = []
+	var size = hex_to_decimal(data.substr(0,1))
+	print(int(0xF5))
+	if size > 0:
+		for i in range(1, data.length(), size):
+			arr.append(hex_to_decimal(data.substr(i, size)))
+	print(arr)
+	return arr
+
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	$Field/Hay.visible = false
 	$Field/Hay2.visible = false
+	
+	load_from_file(text_link)
 	
 	$Backsound.play()
 	$Timer.start()
@@ -45,6 +201,7 @@ func _ready() -> void:
 	products.append(Product.new(0, "Casino(x3)"))
 	products.append(Product.new(0, "Casino(x10)"))
 	products.append(Product.new(int(pow(10, 15)), "flag"))
+	products.append(Product.new(10000000000, "password"))
 
 
 func shift_products_up() -> void:
@@ -106,6 +263,16 @@ func output(num: int) -> String:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	save_to_file(text_link)
+	if is_rank:
+		products.append(Product.new(10000000, "+1 damage"))
+	
+	sheep1_pos = $Field/Sheep.position
+	sheep2_pos = $Field/Sheep2.position
+
+	hay1_vis = $Field/Hay.visible
+	hay2_vis = $Field/Hay2.visible
+	
 	if not($Backsound.is_playing()):
 		$Backsound.play()
 	
@@ -235,6 +402,16 @@ func _on_buy_button_down() -> void:
 		elif products[1].text == "Second Sheep":
 			$Field/Sheep2.position = Vector2(0, 0)
 			products.pop_at(1)
+		elif products[1].text == "flag":
+			$Shop/Win.play()
+			$Shop/Label.text = "flag{!successful&farmer!}"
+			products.pop_at(1)
+		elif products[1].text == "password":
+			$Shop/Win.play()
+			$Shop/Label.text = "Tmowmfazuezuoq"
+			products.pop_at(1)
+		if products[1].text == "+1 damage":
+			damage += 1 * mod_product
 
 
 func _on_mod_1_button_down() -> void:

@@ -1,5 +1,8 @@
-Timer
 AudioStreamPlayer
+Label
+Sprite2D
+Control
+Timer
 RichTextLabel
 Button
 GridContainer
