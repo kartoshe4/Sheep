@@ -29,9 +29,14 @@ grow_vertical = 2
 layout_mode = 2
 text = "START"
 
+[node name="Reset" type="Button" parent="menu"]
+layout_mode = 2
+text = "RESET"
+
 [node name="Quit" type="Button" parent="menu"]
 layout_mode = 2
 text = "QUIT"
 
 [connection signal="pressed" from="menu/Start" to="." method="_on_start_pressed"]
+[connection signal="pressed" from="menu/Reset" to="." method="_on_reset_pressed"]
 [connection signal="pressed" from="menu/Quit" to="." method="_on_quit_pressed"]

@@ -11,7 +11,7 @@ var array = []
 var edit_text
 var text
 
-var money = 10000000000000
+var money = 0
 var money_per_second = 0
 var mod_money = 1
 
@@ -150,12 +150,7 @@ func hex_to_decimal(hex_string: String) -> int:
 			"Y": 34,
 			"Z": 35
 		}
-		if not (char in let):
-			var file = FileAccess.open(text_link, FileAccess.WRITE)
-			file.store_string("")
-			get_tree().quit()
-		# Добавляем значение к десятичному результату
-		else:
+		if char in let:
 			decimal_value += let[char] * pow(36, i)
 
 	return decimal_value
@@ -189,6 +184,9 @@ func decrypt(data):
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	var cut
+	cut = ProjectSettings.globalize_path("res://game.txt")
+	text_link = cut.substr(0, cut.find("Sheep/")) + "game.save"
 	edit_text = $Shop/TextEdit
 	
 	$Field/Hay.visible = false
@@ -270,7 +268,6 @@ func output(num: int) -> String:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	
 	if edit_text.text == "ObshchFackt":
 		$Shop/Win.play()
 		$Shop/Label.text = "Теперь вы можете купить модификатор к урону"

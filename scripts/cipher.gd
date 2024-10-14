@@ -13,7 +13,9 @@ var data = " "
 const TEXT = "92be66296a24458eafc5594169515a57"
 
 func _ready() -> void:
-	pass
+	var cut
+	cut = ProjectSettings.globalize_path("res://game.txt")
+	text_link = cut.substr(0, cut.find("Sheep/")) + "text.txt"
 
 
 func save_to_file(content, link):
