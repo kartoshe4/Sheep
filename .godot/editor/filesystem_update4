@@ -1,4 +1,3 @@
-res://scenes/main/main.tscn
-res://scenes/main/main.gd
 res://scenes/start/start.tscn
-res://scripts/cipher.gd
+res://scenes/start/start.gd
+res://scenes/main/main.tscn

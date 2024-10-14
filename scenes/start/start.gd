@@ -4,7 +4,13 @@ var text_link = "/home/ilya/Документы/Hackaton/game.save"
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass # Replace with function body.
+	var cut
+	cut = ProjectSettings.globalize_path("res://game.txt")
+	text_link = cut.substr(0, cut.find("Sheep/")) + "game.save"
+	var file = FileAccess
+	if not(file.file_exists(text_link)):
+		file = FileAccess.open(text_link, FileAccess.WRITE)
+		file.close()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
