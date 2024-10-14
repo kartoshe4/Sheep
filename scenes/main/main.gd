@@ -48,7 +48,7 @@ var products = []
 
 var is_rank = false
 
-var damage = 10000
+var damage = 1
 
 func save_to_file(link):
 	array.clear()
@@ -187,6 +187,10 @@ func _ready() -> void:
 	var cut
 	cut = ProjectSettings.globalize_path("res://game.txt")
 	text_link = cut.substr(0, cut.find("Sheep/")) + "game.save"
+	var file = FileAccess
+	if not(file.file_exists(text_link)):
+		file = FileAccess.open(text_link, FileAccess.WRITE)
+		file.close()
 	edit_text = $Shop/TextEdit
 	
 	$Field/Hay.visible = false
